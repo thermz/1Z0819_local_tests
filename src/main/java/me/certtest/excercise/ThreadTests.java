@@ -18,22 +18,61 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.IntStream;
 
 /**
  *
  * @author Riccardo
  */
+
+class Flip {
+    private AtomicBoolean toFlip = new AtomicBoolean(false);
+    
+    public boolean get(){
+	return toFlip.get();
+    }
+    
+    public synchronized void toggle(){
+	boolean oldValue = toFlip.get();
+	boolean newValue = !oldValue;
+	toFlip.set(newValue);
+	System.out.println("Flipped oldValue "+oldValue+" to new value "+newValue);
+    }
+    
+}
+
 public class ThreadTests {
     
     static AtomicLong al = new AtomicLong(5L);
     
+    static AtomicBoolean ab = new AtomicBoolean(true);
     
     public static void testSubmit() throws InterruptedException, ExecutionException{
 	var s = Executors.newCachedThreadPool();
 	Future f = s.submit(() -> System.out.println("aaaa"));
 	s.shutdown();
 	f.get();
+    }
+    
+    static void testAtomicBoolean() throws InterruptedException{
+	ab.compareAndSet(true, false);
+	
+	Flip flip = new Flip();
+	
+	System.out.println("Flip is "+ flip.get());
+	var e = Executors.newCachedThreadPool();
+	IntStream.rangeClosed(1, 15).forEach( i -> {
+	    e.execute( ()-> flip.toggle() );
+	});
+	
+	e.shutdown();
+	e.awaitTermination(10, TimeUnit.SECONDS);
+	
+	System.out.println("Flip is "+ flip.get());
+
     }
     
     
@@ -102,10 +141,13 @@ public class ThreadTests {
 	
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 	//run(new CyclicBarrier(4, () -> System.out.println("Ready!")));
 	
-	testDataStructures();
+//	testDataStructures();
+	
+	testAtomicBoolean();
+	
     }
     
 }

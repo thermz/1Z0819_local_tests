@@ -68,8 +68,10 @@ public class ArraysTests<N> {
     public static void main(String[] args) {
 //	testComparatorLength();
 //	testArrayPrimitive();
-	
-	testListOf();
+
+//	testListOf();
+
+	testSorting();
 
 //	
 //	System.out.println("---------- HASH ");
@@ -196,13 +198,19 @@ public class ArraysTests<N> {
 	
 	Collection<String> c = new ArrayDeque<>();
 	
-	
-	
+	var b = new ArrayDeque<>();
+	b.offer(1);
+	b.offer(2);
     }
     
     static void testSorting(){
 	String [] s = new String[]{"Z","aaaa","bbbb","cccc"};
 	
+	Arrays.sort(s);
+	
+	int search = Arrays.binarySearch(s, "bbaa");
+	
+	System.out.println(search);
+	
     }
-
 }
