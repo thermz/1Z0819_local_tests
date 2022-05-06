@@ -4,20 +4,9 @@
  */
 package me.certtest.excercise;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.HashSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.BooleanSupplier;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
@@ -197,10 +186,13 @@ public class ArraysTests<N> {
 	ll.push(1);
 	
 	Collection<String> c = new ArrayDeque<>();
-	
+
 	var b = new ArrayDeque<>();
 	b.offer(1);
 	b.offer(2);
+
+	    var q = new LinkedList<>();
+
     }
     
     static void testSorting(){

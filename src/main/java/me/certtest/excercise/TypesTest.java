@@ -16,6 +16,29 @@ import java.util.List;
  */
 public class TypesTest {
 
+	enum TEST_ENUM { A("AA"),B("BB"),C("CC");
+		TEST_ENUM(){
+			this("");
+		}
+
+		private final String val;
+
+		public static final String valEnumStatic ="val";
+
+		TEST_ENUM(String value){
+			this.val = value;
+		}
+
+		@Override
+		public String toString() {
+			return val;
+		}
+
+		public static String checkV(){
+			return valEnumStatic.toUpperCase();
+		}
+	}
+
     int n1, n2=0;
     
     public static void main(String[] args) {
