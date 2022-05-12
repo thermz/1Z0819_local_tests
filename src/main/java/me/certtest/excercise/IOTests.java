@@ -23,6 +23,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import static java.util.Objects.isNull;
+
+import java.util.Arrays;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -128,10 +130,12 @@ public class IOTests implements Cloneable{
     public static void main(String[] args) {
 //	testFilesClass();
 	//testBufferedWriter();
-	testPathDir();
+//	testPathDir();
 //	testReadLines();
 //	testOutputStream();
 //	testConsole();
+
+	    testInputStream2();
 
 //	testFile();
     }
@@ -192,5 +196,47 @@ public class IOTests implements Cloneable{
 	}
 
     }
+
+	public static void testInputStream2(){
+		byte [] barr = { 1,2,3,4,5,6,7 };
+
+		System.out.println("Starting with "+Arrays.toString( barr ) );
+
+		InputStream bais = new ByteArrayInputStream(barr);
+		try(bais){
+
+			byte [] two = new byte[]{3,3};
+			bais.read(two);
+			bais.read();
+			System.out.println("There are "+bais.available()+" available bytes");
+
+			byte[] remainingBytes = bais.readAllBytes();
+			bais.mark(4);
+			System.out.println("Remaining bytes are "+Arrays.toString(remainingBytes));
+
+			System.out.println("There are "+bais.available()+" available bytes");
+			bais.reset();
+			System.out.println("There are "+bais.available()+" available bytes");
+
+			bais.read();
+			bais.read();
+
+			byte [] nextTwo = new byte[]{3,3};
+			bais.read(nextTwo);
+
+			System.out.println("first 2 are "+ Arrays.toString(two));
+			System.out.println("next 2 are " + Arrays.toString(nextTwo));
+
+			System.out.println("Reading a depleted InputStream " + bais.read() + " " + bais.read());
+
+			int available = bais.available();
+
+			System.out.println("There are "+available+" available bytes");
+
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
 
 }
