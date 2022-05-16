@@ -1,20 +1,6 @@
 package me.certtest.excercise;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.Console;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.io.Writer;
+import java.io.*;
 import java.net.URI;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
@@ -232,6 +218,25 @@ public class IOTests implements Cloneable{
 			int available = bais.available();
 
 			System.out.println("There are "+available+" available bytes");
+
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	public static void testInputStreamReader(){
+		byte [] barr = { 1,2,3,4,5,6,7 };
+
+		System.out.println("Starting with "+Arrays.toString( barr ) );
+
+		InputStreamReader bais = new InputStreamReader(new ByteArrayInputStream(barr));
+		try(bais){
+
+			byte [] two = new byte[]{3,3};
+
+			bais.read();
+
 
 		} catch (IOException e) {
 			throw new RuntimeException(e);

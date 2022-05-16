@@ -87,5 +87,53 @@ public class TypesTest {
 	Comparator<String> c = (var a1, var a2) -> 0;
     }
     
-    
+    static void testSwitch(){
+		String s = "asd";
+
+
+
+    }
+
+	enum ASD {ASD , OK};
+	private void switchMet(String s){
+		switch (s){
+			case "a":
+				System.out.println("a");
+			default:
+			case "b":
+				System.out.println("b");
+			case "asd":
+				System.out.println("ok");
+		}
+	}
+
+	private void switchMet(char c){
+		switch (c){
+			case 'a':
+				System.out.println("a");
+			default:
+			case 'b':
+				System.out.println("b");
+			case 'k' :
+				System.out.println("ok");
+			case 123:
+				System.out.println("int works too!");
+		}
+	}
+
+	private void switchMet(short c){
+		switch (c){
+			case 'a':
+				System.out.println("a");
+			default:
+			case 'b':
+				System.out.println("b");
+			case 'ù':
+				System.out.println("ok");
+			case 1293:
+				System.out.println("int works too!");
+		}
+	}
+
+
 }
