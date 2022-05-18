@@ -76,7 +76,7 @@ abstract class SuperIFTest implements TestInterface, AnotherTestInterface {
 	String color2 = (String) TestInterface.super.check(seq);
 	
 	var res = MessageFormat.format("OK {0}, {1} and then again {0}",color1, color2);
-
+	
 	return res;
     }
     
@@ -93,6 +93,14 @@ abstract class SuperFTest {
     { System.out.println("5"); }
     
     abstract void testMe();
+    
+}
+
+class Concrete implements MyIF{
+
+    public Concrete(int a) {
+	super();
+    }
     
 }
 

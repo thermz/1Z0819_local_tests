@@ -21,7 +21,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
+import static me.certtest.excercise.Utils.uncheck;
 
 /**
  *
@@ -50,11 +52,25 @@ public class ThreadTests {
     
     static AtomicBoolean ab = new AtomicBoolean(true);
     
+    static ReentrantLock lock = new ReentrantLock();
+    
+    static void testLock(){
+//	lock.
+    }
+    
     public static void testSubmit() throws InterruptedException, ExecutionException{
 	var s = Executors.newCachedThreadPool();
-	Future f = s.submit(() -> System.out.println("aaaa"));
+	Future f = s.submit(() ->{
+	    System.out.println("aaaa");
+	    uncheck( () -> Thread.sleep(2000) );
+	});
 	s.shutdown();
-	f.get();
+	System.out.println(s.isShutdown());
+	System.out.println(s.isTerminated());
+	Object res = f.get();
+	System.out.println("res is "+res);
+//	Thread.sleep(100);
+	System.out.println(s.isTerminated());
     }
     
     static void testAtomicBoolean() throws InterruptedException{
@@ -74,7 +90,6 @@ public class ThreadTests {
 	System.out.println("Flip is "+ flip.get());
 
     }
-    
     
     static void await(CyclicBarrier b){
 	try{
@@ -141,12 +156,14 @@ public class ThreadTests {
 	
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
 	//run(new CyclicBarrier(4, () -> System.out.println("Ready!")));
 	
 //	testDataStructures();
 	
-	testAtomicBoolean();
+//	testAtomicBoolean();
+	
+	testSubmit();
 	
     }
     

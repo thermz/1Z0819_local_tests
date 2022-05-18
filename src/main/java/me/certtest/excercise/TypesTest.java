@@ -21,6 +21,8 @@ public class TypesTest {
 			this("");
 		}
 
+		enum InnerEnum {ASD,LOL};
+		
 		private final String val;
 
 		public static final String valEnumStatic ="val";
@@ -38,8 +40,14 @@ public class TypesTest {
 			return valEnumStatic.toUpperCase();
 		}
 	}
+	
+	enum ANOTHER { A(1), B(2);
+	    ANOTHER(int val){}
+	}
 
     int n1, n2=0;
+    
+    double dou = .76;
     
     public static void main(String[] args) {
 	testStrings();

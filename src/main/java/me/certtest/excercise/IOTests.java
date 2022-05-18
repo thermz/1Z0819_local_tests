@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import static java.util.Objects.isNull;
+import java.util.function.Consumer;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ import static me.certtest.excercise.Utils.uncheck;
  * @author Riccardo
  */
 class CustomBufferedWriter extends BufferedWriter {
-
+    
     public CustomBufferedWriter(Writer out) throws IOException {
 	super(out);
 	//throw new IOException();
@@ -45,6 +46,7 @@ class CustomBufferedWriter extends BufferedWriter {
     @Override
     public void close() throws IOException {
 	super.close();
+	
 	System.out.println("CLOSING");
     }
 
@@ -56,6 +58,15 @@ public class IOTests implements Cloneable{
 	try {
 	    Utils.uncheck(() -> Files.move(Path.of(""), Path.of(""), StandardCopyOption.ATOMIC_MOVE));
 	    Files.find(Path.of("."), 1, (p, a) -> p.getFileName().toString().contains("txt"));
+	    
+	    Consumer<Path> cons = Files::isDirectory;
+	    
+	    Files.walk(Path.of("."))
+		    .filter(Files::isDirectory)
+		    .forEach(p ->{
+			Files.isDirectory(p);
+		    });
+	    	    
 	} catch (IOException ex) {
 	    Logger.getLogger(IOTests.class.getName()).log(Level.SEVERE, null, ex);
 	}
@@ -84,12 +95,47 @@ public class IOTests implements Cloneable{
 
     }
 
-    public static void testPathDir() {
+    public static void testPathDir() throws IOException {
 	var f1 = Path.of("templates\\proofs\\aaa\\bbb\\ccc\\dddd");
 	var f2 = f1.subpath(2, 6);//.getName(1);
 	var f3 = Paths.get("\\aaa\\bbb");
 
-	System.out.println("Subpath is " + f2);
+	System.out.println("Subpath is " + f2.getName(1));
+	
+	Path testPath = Path.of("io_test.txt");
+	Path rp = uncheck( () -> testPath.toRealPath() );
+	System.out.println("RP "+rp);
+	
+	System.out.println("TestPath is same of RealPath? "+Files.isSameFile(testPath, rp));
+	
+	Path normalized = uncheck( () -> testPath.normalize() );
+	System.out.println("Normalized "+normalized);
+	
+	Path projDir = Path.of("..").toRealPath();
+	Files.find(projDir, 2, (p, a) -> p.endsWith("pom.xml")).forEach(System.out::println);
+	
+	
+
+    }
+    
+    public static void testFind() throws Exception{
+	Path jsonFile = Files.find(Path.of("."), 6, (p, a) -> p.endsWith("newfile.json") )
+		.findFirst()
+		.get();
+	
+	Path iotest = Path.of("io_test.txt");
+	
+	Path target = jsonFile.resolve("..").resolve("dir").normalize();
+	
+	System.out.println("Target is "+target);
+	
+	Path here = Path.of(".");
+	
+	Files.move(iotest, target.resolve("anothertest.txt"), StandardCopyOption.REPLACE_EXISTING);
+	
+	Files.copy(target.resolve("anothertest.txt"), here.resolve("io_test.txt"));
+	
+	System.out.println(iotest.relativize(jsonFile));
     }
 
     public static void testReadLines() {
@@ -100,7 +146,7 @@ public class IOTests implements Cloneable{
 		.count();
 
 	var attr = uncheck(() -> Files.readAttributes(testPath, BasicFileAttributes.class));
-
+	
 	System.out.println(counter);
     }
 
@@ -108,6 +154,23 @@ public class IOTests implements Cloneable{
 	byte[] bytes = new byte[]{1, 2, 3, 4, 5, 6};
 	try (InputStream i = new ByteArrayInputStream(bytes)) {
 
+	    i.read();
+	    if(i.markSupported()){ i.mark(1); }
+	    i.read();
+	    i.read();
+	    i.read();
+	    i.read();
+	    i.read();
+	    i.read();
+	    i.read();
+	    i.reset();
+	    System.out.println("reset to 2 or 1? "+i.read());
+	    
+	    i.read();
+	    i.read();
+	    i.reset();
+	    System.out.println("Now mark is at "+i.read());
+	    
 	} catch (IOException ex) {
 	    Logger.getLogger(IOTests.class.getName()).log(Level.SEVERE, null, ex);
 	}
@@ -122,16 +185,19 @@ public class IOTests implements Cloneable{
 
     static void testFile() {
 	Path p = new File("C:\\Users\\Riccardo\\Documents\\\\NetBeansProjects\\CertTest\\asd.txt").toPath();
-
+	
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+//	testInputStream();
 //	testFilesClass();
 	//testBufferedWriter();
-	testPathDir();
+//	testPathDir();
 //	testReadLines();
 //	testOutputStream();
 //	testConsole();
+
+	testFind();
 
 //	testFile();
     }
