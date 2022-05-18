@@ -1,11 +1,6 @@
 package me.certtest.excercise;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static me.certtest.excercise.Utils.uncheck;
@@ -43,6 +38,17 @@ public class JDBCTests {
 			ps.close();
 
 			System.out.println("Count is " + set);
+			
+		var preparedInsert = "INSERT INTO Phone values('Riccardo', ?)";
+		PreparedStatement insertPs = conn.prepareStatement(preparedInsert);
+		insertPs.setInt(1, 123456);
+
+		try(insertPs){
+			var insertedRows = insertPs.executeUpdate();
+			System.out.println("inserted "+insertedRows+" with preparedstatement");
+		}
+
+	    ps.close();
 
 			try (var result = stat.executeQuery("SELECT * FROM Phone")) {
 				while (result.next()) {
