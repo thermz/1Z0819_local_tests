@@ -144,13 +144,30 @@ public class FuncIntInterrogation$_$ {
 		long rightResponsesCounter = attempts.stream().filter(Attempt::getOutcome).count();
 		long totalResponsesCounter = attempts.size();
 
-		System.out.printf("\nYou got %s%% of correct responses", ANSI_PURPLE+getRate(rightResponsesCounter, totalResponsesCounter)+ANSI_RESET );
+		BigDecimal rate = getRate(rightResponsesCounter,totalResponsesCounter);
+		String rateColor = getRateColor(rate);
 
+		System.out.printf("\nYou got %s%% of correct responses", rateColor+rate+ANSI_RESET );
+
+	}
+
+	static final BigDecimal
+			LOW_RATE = BigDecimal.valueOf(40),
+			HIGH_RATE = BigDecimal.valueOf(80);
+
+	private static String getRateColor(BigDecimal rate) {
+		if( LOW_RATE.compareTo(rate) > 0 ){
+			return ANSI_RED;
+		} else if( rate.compareTo(HIGH_RATE) > 0 ){
+			return ANSI_GREEN;
+		} else {
+			return ANSI_YELLOW;
+		}
 	}
 
 	private static BigDecimal getRate(Long amount, Long totalAmount){
 		return new BigDecimal(amount)
-				.multiply(BigDecimal.valueOf(100L))
+				.multiply(BigDecimal.valueOf(100))
 				.divide(BigDecimal.valueOf(totalAmount), 2, RoundingMode.HALF_DOWN );
 	}
 
