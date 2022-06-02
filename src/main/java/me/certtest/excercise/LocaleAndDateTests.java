@@ -4,6 +4,7 @@
  */
 package me.certtest.excercise;
 
+import java.nio.file.AccessDeniedException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class LocaleAndDateTests {
 		var f = DateTimeFormatter.ofPattern("ddMMyyyyhh");
 
 		var dtout = d.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		
 		System.out.println(dtout);
 
 		var output = f.format(dt);
@@ -101,7 +103,6 @@ public class LocaleAndDateTests {
 		printLabel(resources);
 		resources = bundleOf(Locale.US);
 		printRBAvailableKeys(resources);
-
 		resources = bundleOf(Locale.UK);
 		printRBAvailableKeys(resources);
 
